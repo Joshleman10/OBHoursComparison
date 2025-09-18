@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outbound Hours Comparison</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+
+<body>
+  <!-- Main Content -->
+  <div class="main">
+    <h1>Outbound Department Hours Comparison</h1>
+
+    <!-- Single Mode Layout (Default) -->
+    <div id="singleModeContainer">
+      <div class="input-area" id="inputSection">
+        <p>Copy your Chewy Labor Management System <strong>Outbound</strong> section data to clipboard, then click the button below:</p>
+        <button onclick="processClipboardData()">=Ê Process Clipboard Data</button>
+        <button onclick="setComparisonMode()" class="mode-btn" id="comparisonModeBtn">– Side-by-Side
+          Comparison</button>
+      </div>
+
+      <div class="summary" id="totalHours" style="display: none;"></div>
+
+      <canvas id="hoursChart" style="width: 600px; height: 400px; margin: 2rem auto; display: none;"></canvas>
+
+      <div style="text-align:center; margin-bottom: 2rem;">
+        <button onclick="resetPage()" class="reset-button" id="resetButton" style="display: none;">= Process New
+          Data</button>
+        <button onclick="generatePDFReport()" class="mode-btn pdf-btn" id="pdfBtn"
+          style="display: none; margin-left: 1rem;">=Ä Generate PDF Report</button>
+      </div>
+
+      <table id="resultsTable" style="display: none;">
+        <thead>
+          <tr>
+            <th>Outbound Area</th>
+            <th>Hours</th>
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody id="hoursTable"></tbody>
+      </table>
+    </div>
+
+    <!-- Comparison Mode Layout -->
+    <div id="comparisonModeContainer" style="display: none;">
+      <div class="comparison-container">
+
+        <!-- Left Side -->
+        <div class="comparison-side">
+          <h2>Dataset A <span class="dataset-label" id="labelA">(4-Week Average)</span></h2>
+
+          <div class="input-area">
+            <p>Copy Dataset A to clipboard:</p>
+            <button onclick="processClipboardDataA()">=Ê Load Dataset A</button>
+          </div>
+
+          <div class="summary" id="totalHoursA" style="display: none;"></div>
+          <canvas id="hoursChartA" style="width: 100%; height: 300px; display: none;"></canvas>
+
+          <table id="resultsTableA" style="display: none;">
+            <thead>
+              <tr>
+                <th>Outbound Area</th>
+                <th>Hours</th>
+                <th>%</th>
+              </tr>
+            </thead>
+            <tbody id="hoursTableA"></tbody>
+          </table>
+        </div>
+
+        <!-- Right Side -->
+        <div class="comparison-side">
+          <h2>Dataset B <span class="dataset-label" id="labelB">(Daily Data)</span></h2>
+
+          <div class="input-area">
+            <p>Copy Dataset B to clipboard:</p>
+            <button onclick="processClipboardDataB()">=Ê Load Dataset B</button>
+          </div>
+
+          <div class="summary" id="totalHoursB" style="display: none;"></div>
+          <canvas id="hoursChartB" style="width: 100%; height: 300px; display: none;"></canvas>
+
+          <table id="resultsTableB" style="display: none;">
+            <thead>
+              <tr>
+                <th>Outbound Area</th>
+                <th>Hours</th>
+                <th>%</th>
+              </tr>
+            </thead>
+            <tbody id="hoursTableB"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Comparison Analysis -->
+      <div id="comparisonAnalysis" style="display: none;">
+        <h2>=È Comparison Analysis</h2>
+        <div id="comparisonResults"></div>
+      </div>
+
+      <div style="text-align:center; margin: 2rem 0;">
+        <button onclick="resetComparison()" class="reset-button">= Reset Comparison</button>
+        <button onclick="backToSingleMode()" class="mode-btn" style="margin-left: 1rem;">=Ê Back to Single
+          Analysis</button>
+        <button onclick="generatePDFReport()" class="mode-btn pdf-btn" id="pdfBtnComparison"
+          style="display: none; margin-left: 1rem;">=Ä Generate PDF Report</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="OBHoursComparison.js"></script>
+</body>
+
+</html>

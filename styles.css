@@ -1,0 +1,335 @@
+/* Base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 2.5rem;
+  font-weight: 300;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 15px;
+}
+
+h2 {
+  color: #34495e;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 400;
+}
+
+/* Input area styles */
+.input-area {
+  background-color: #ecf0f1;
+  padding: 25px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  text-align: center;
+  border-left: 4px solid #3498db;
+}
+
+.input-area p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+  color: #5d6d7e;
+}
+
+/* Button styles */
+button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 5px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mode-btn {
+  background-color: #e74c3c;
+}
+
+.mode-btn:hover {
+  background-color: #c0392b;
+}
+
+.mode-btn.active {
+  background-color: #27ae60;
+}
+
+.mode-btn.active:hover {
+  background-color: #219a52;
+}
+
+.reset-button {
+  background-color: #95a5a6;
+}
+
+.reset-button:hover {
+  background-color: #7f8c8d;
+}
+
+.pdf-btn {
+  background-color: #f39c12;
+}
+
+.pdf-btn:hover {
+  background-color: #e67e22;
+}
+
+/* Summary styles */
+.summary {
+  background-color: #d5f4e6;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #27ae60;
+  margin-bottom: 25px;
+  border-left: 4px solid #27ae60;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ecf0f1;
+  font-size: 0.95rem;
+}
+
+tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #e8f4f8;
+  transition: background-color 0.2s ease;
+}
+
+/* Comparison mode styles */
+.comparison-container {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.comparison-side {
+  flex: 1;
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  border: 2px solid #bdc3c7;
+}
+
+.comparison-side h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.dataset-label {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  font-weight: normal;
+}
+
+/* Comparison analysis styles */
+#comparisonAnalysis {
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 8px;
+  margin-top: 30px;
+  border-left: 4px solid #3498db;
+}
+
+.comparison-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  background-color: white;
+  border-left: 4px solid #bdc3c7;
+  transition: all 0.3s ease;
+}
+
+.comparison-result-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-result-item.increase {
+  border-left-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.comparison-result-item.decrease {
+  border-left-color: #27ae60;
+  background-color: #f2fdf7;
+}
+
+.function-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.hours-change {
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.hours-change.increase {
+  color: #e74c3c;
+  background-color: #fadbd8;
+}
+
+.hours-change.decrease {
+  color: #27ae60;
+  background-color: #d5f4e6;
+}
+
+.hours-change.unchanged {
+  color: #7f8c8d;
+  background-color: #f8f9fa;
+}
+
+/* Chart container */
+canvas {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  margin: 20px 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .main {
+    padding: 15px;
+    margin: 10px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .comparison-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .input-area {
+    padding: 20px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 8px 10px;
+  }
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error states */
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+/* Success states */
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+/* Enhanced tertiary row styling */
+tr.tertiary-row {
+  background-color: #f1f3f4 !important;
+}
+
+tr.tertiary-row:hover {
+  background-color: #e8eaf0 !important;
+}
+
+/* Category header rows */
+tr.category-header {
+  font-weight: bold;
+}
+
+tr.category-header:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
