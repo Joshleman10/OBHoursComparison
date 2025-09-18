@@ -333,3 +333,268 @@ tr.category-header {
 tr.category-header:hover {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
+
+/* Dark Mode Toggle */
+.dark-mode-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.dark-mode-btn {
+  background-color: #f8f9fa;
+  border: 2px solid #dee2e6;
+  color: #495057;
+  padding: 8px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode-btn:hover {
+  background-color: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* CSS Variables for Light Theme (Default) */
+:root {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: white;
+  --bg-tertiary: #ecf0f1;
+  --bg-quaternary: #f8f9fa;
+  --text-primary: #333;
+  --text-secondary: #2c3e50;
+  --text-tertiary: #34495e;
+  --text-muted: #5d6d7e;
+  --border-color: #dee2e6;
+  --border-accent: #3498db;
+  --shadow-light: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.2);
+  --table-stripe: #f8f9fa;
+  --table-hover: #e8f4f8;
+  --summary-bg: #d5f4e6;
+  --summary-text: #27ae60;
+  --comparison-bg: #f8f9fa;
+  --comparison-border: #bdc3c7;
+}
+
+/* Dark Theme Variables */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #3a3a3a;
+  --bg-quaternary: #2d2d2d;
+  --text-primary: #e9ecef;
+  --text-secondary: #f8f9fa;
+  --text-tertiary: #dee2e6;
+  --text-muted: #adb5bd;
+  --border-color: #495057;
+  --border-accent: #4dabf7;
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  --shadow-medium: rgba(0, 0, 0, 0.5);
+  --table-stripe: #343a40;
+  --table-hover: #495057;
+  --summary-bg: #1e4d35;
+  --summary-text: #40c463;
+  --comparison-bg: #2d2d2d;
+  --comparison-border: #6c757d;
+}
+
+/* Update existing styles to use CSS variables */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.main {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 2px 10px var(--shadow-light);
+}
+
+h1 {
+  color: var(--text-secondary);
+  border-bottom: 3px solid var(--border-accent);
+}
+
+h2 {
+  color: var(--text-tertiary);
+}
+
+.input-area {
+  background-color: var(--bg-tertiary);
+  border-left: 4px solid var(--border-accent);
+}
+
+.input-area p {
+  color: var(--text-muted);
+}
+
+table {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+th {
+  background-color: var(--text-tertiary);
+  color: var(--bg-secondary);
+}
+
+td {
+  border-bottom: 1px solid var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+tr:nth-child(even) {
+  background-color: var(--table-stripe);
+}
+
+tr:nth-child(even) td {
+  color: var(--text-primary);
+}
+
+tr:hover {
+  background-color: var(--table-hover);
+}
+
+tr:hover td {
+  color: var(--text-primary);
+}
+
+.comparison-side {
+  background-color: var(--comparison-bg);
+  border: 2px solid var(--comparison-border);
+}
+
+.comparison-side h2 {
+  color: var(--text-secondary);
+}
+
+.dataset-label {
+  color: var(--text-muted);
+}
+
+#comparisonAnalysis {
+  background-color: var(--comparison-bg);
+  border-left: 4px solid var(--border-accent);
+}
+
+.comparison-result-item {
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--comparison-border);
+}
+
+.function-name {
+  color: var(--text-secondary);
+}
+
+.summary {
+  background-color: var(--summary-bg);
+  color: var(--summary-text);
+  border-left: 4px solid var(--summary-text);
+}
+
+canvas {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 2px 8px var(--shadow-light);
+}
+
+.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Dark mode specific overrides */
+[data-theme="dark"] .dark-mode-btn {
+  background-color: #495057;
+  border-color: #6c757d;
+  color: #f8f9fa;
+}
+
+[data-theme="dark"] .dark-mode-btn:hover {
+  background-color: #6c757d;
+}
+
+[data-theme="dark"] .error {
+  background-color: #721c24;
+  color: #f8d7da;
+  border-color: #a94442;
+}
+
+[data-theme="dark"] .success {
+  background-color: #155724;
+  color: #d4edda;
+  border-color: #449d44;
+}
+
+/* Additional dark mode table fixes */
+[data-theme="dark"] td {
+  color: #e9ecef !important;
+}
+
+[data-theme="dark"] tr:nth-child(even) td {
+  color: #e9ecef !important;
+}
+
+[data-theme="dark"] tr:hover td {
+  color: #f8f9fa !important;
+}
+
+[data-theme="dark"] .tertiary-row td {
+  color: #e9ecef !important;
+}
+
+[data-theme="dark"] .category-header td {
+  color: #f8f9fa !important;
+  font-weight: bold;
+}
+
+/* Dark mode comparison result items */
+[data-theme="dark"] .comparison-result-item {
+  background-color: #3a3a3a !important;
+  color: #e9ecef !important;
+}
+
+[data-theme="dark"] .comparison-result-item.increase {
+  background-color: #4a2c2c !important;
+  border-left-color: #dc3545 !important;
+}
+
+[data-theme="dark"] .comparison-result-item.decrease {
+  background-color: #2c4a2c !important;
+  border-left-color: #28a745 !important;
+}
+
+[data-theme="dark"] .function-name {
+  color: #f8f9fa !important;
+}
+
+[data-theme="dark"] .hours-change {
+  color: inherit !important;
+}
+
+[data-theme="dark"] .hours-change.increase {
+  background-color: #6d2c2c !important;
+  color: #ffb3b3 !important;
+}
+
+[data-theme="dark"] .hours-change.decrease {
+  background-color: #2c6d2c !important;
+  color: #b3ffb3 !important;
+}
+
+[data-theme="dark"] .hours-change.unchanged {
+  background-color: #4a4a4a !important;
+  color: #cccccc !important;
+}

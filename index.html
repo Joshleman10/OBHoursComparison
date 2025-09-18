@@ -15,14 +15,21 @@
 <body>
   <!-- Main Content -->
   <div class="main">
+    <!-- Dark Mode Toggle -->
+    <div class="dark-mode-toggle">
+      <button id="darkModeBtn" class="dark-mode-btn" onclick="toggleDarkMode()">
+        ğŸŒ™ Dark
+      </button>
+    </div>
+
     <h1>Outbound Department Hours Comparison</h1>
 
     <!-- Single Mode Layout (Default) -->
     <div id="singleModeContainer">
       <div class="input-area" id="inputSection">
         <p>Copy your Chewy Labor Management System <strong>Outbound</strong> section data to clipboard, then click the button below:</p>
-        <button onclick="processClipboardData()">=Ê Process Clipboard Data</button>
-        <button onclick="setComparisonMode()" class="mode-btn" id="comparisonModeBtn">– Side-by-Side
+        <button onclick="processClipboardData()">ğŸ“‹ Process Clipboard Data</button>
+        <button onclick="setComparisonMode()" class="mode-btn" id="comparisonModeBtn">âš–ï¸ Side-by-Side
           Comparison</button>
       </div>
 
@@ -31,10 +38,10 @@
       <canvas id="hoursChart" style="width: 600px; height: 400px; margin: 2rem auto; display: none;"></canvas>
 
       <div style="text-align:center; margin-bottom: 2rem;">
-        <button onclick="resetPage()" class="reset-button" id="resetButton" style="display: none;">= Process New
+        <button onclick="resetPage()" class="reset-button" id="resetButton" style="display: none;">ğŸ”„ Process New
           Data</button>
         <button onclick="generatePDFReport()" class="mode-btn pdf-btn" id="pdfBtn"
-          style="display: none; margin-left: 1rem;">=Ä Generate PDF Report</button>
+          style="display: none; margin-left: 1rem;">ğŸ“„ Generate PDF Report</button>
       </div>
 
       <table id="resultsTable" style="display: none;">
@@ -59,7 +66,7 @@
 
           <div class="input-area">
             <p>Copy Dataset A to clipboard:</p>
-            <button onclick="processClipboardDataA()">=Ê Load Dataset A</button>
+            <button onclick="processClipboardDataA()">ğŸ“‹ Load Dataset A</button>
           </div>
 
           <div class="summary" id="totalHoursA" style="display: none;"></div>
@@ -83,7 +90,7 @@
 
           <div class="input-area">
             <p>Copy Dataset B to clipboard:</p>
-            <button onclick="processClipboardDataB()">=Ê Load Dataset B</button>
+            <button onclick="processClipboardDataB()">ğŸ“‹ Load Dataset B</button>
           </div>
 
           <div class="summary" id="totalHoursB" style="display: none;"></div>
@@ -104,16 +111,16 @@
 
       <!-- Comparison Analysis -->
       <div id="comparisonAnalysis" style="display: none;">
-        <h2>=È Comparison Analysis</h2>
+        <h2>ğŸ“Š Comparison Analysis</h2>
         <div id="comparisonResults"></div>
       </div>
 
       <div style="text-align:center; margin: 2rem 0;">
-        <button onclick="resetComparison()" class="reset-button">= Reset Comparison</button>
-        <button onclick="backToSingleMode()" class="mode-btn" style="margin-left: 1rem;">=Ê Back to Single
+        <button onclick="resetComparison()" class="reset-button">ğŸ”„ Reset Comparison</button>
+        <button onclick="backToSingleMode()" class="mode-btn" style="margin-left: 1rem;">ğŸ“ˆ Back to Single
           Analysis</button>
         <button onclick="generatePDFReport()" class="mode-btn pdf-btn" id="pdfBtnComparison"
-          style="display: none; margin-left: 1rem;">=Ä Generate PDF Report</button>
+          style="display: none; margin-left: 1rem;">ğŸ“„ Generate PDF Report</button>
       </div>
     </div>
   </div>

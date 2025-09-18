@@ -821,21 +821,150 @@ window.addEventListener('beforeunload', () => {
 });
 
 function handlePageLoad() {
-  const wasLeaving = localStorage.getItem(STORAGE_KEYS.isLeaving);
+  // Always clear all data on page load/refresh, but preserve theme preference
+  const savedTheme = localStorage.getItem('theme');
 
-  if (!wasLeaving) {
-    Object.values(STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
-    });
-  } else {
-    loadFromStorage();
+  // Clear all stored data
+  Object.values(STORAGE_KEYS).forEach(key => {
+    localStorage.removeItem(key);
+  });
+
+  // Clear any other stored data except theme
+  localStorage.removeItem(STORAGE_KEYS.isLeaving);
+
+  // Restore theme preference
+  if (savedTheme) {
+    localStorage.setItem('theme', savedTheme);
   }
 
-  localStorage.removeItem(STORAGE_KEYS.isLeaving);
+  // Reset all UI elements to initial state
+  resetAllUIElements();
   updatePDFButtonVisibility();
+}
+
+function resetAllUIElements() {
+  // Reset single mode
+  document.getElementById('totalHours').style.display = 'none';
+  document.getElementById('totalHours').textContent = '';
+  document.getElementById('hoursChart').style.display = 'none';
+  document.getElementById('resultsTable').style.display = 'none';
+  document.getElementById('hoursTable').innerHTML = '';
+  document.getElementById('resetButton').style.display = 'none';
+  document.getElementById('pdfBtn').style.display = 'none';
+
+  // Reset comparison mode
+  document.getElementById('totalHoursA').style.display = 'none';
+  document.getElementById('totalHoursA').textContent = '';
+  document.getElementById('totalHoursB').style.display = 'none';
+  document.getElementById('totalHoursB').textContent = '';
+  document.getElementById('hoursChartA').style.display = 'none';
+  document.getElementById('hoursChartB').style.display = 'none';
+  document.getElementById('resultsTableA').style.display = 'none';
+  document.getElementById('resultsTableB').style.display = 'none';
+  document.getElementById('hoursTableA').innerHTML = '';
+  document.getElementById('hoursTableB').innerHTML = '';
+  document.getElementById('comparisonAnalysis').style.display = 'none';
+  document.getElementById('comparisonResults').innerHTML = '';
+  document.getElementById('pdfBtnComparison').style.display = 'none';
+
+  // Destroy existing charts
+  const existingCharts = ['hoursChart', 'hoursChartA', 'hoursChartB'];
+  existingCharts.forEach(chartId => {
+    const chart = Chart.getChart(chartId);
+    if (chart) {
+      chart.destroy();
+    }
+  });
+
+  // Reset to single mode
+  document.getElementById('singleModeContainer').style.display = 'block';
+  document.getElementById('comparisonModeContainer').style.display = 'none';
+
+  // Reset comparison mode button
+  const comparisonBtn = document.getElementById('comparisonModeBtn');
+  if (comparisonBtn) {
+    comparisonBtn.classList.remove('active');
+  }
+
+  // Clear any global data variables
+  if (typeof window.singleModeData !== 'undefined') {
+    window.singleModeData = null;
+  }
+  if (typeof window.comparisonDataA !== 'undefined') {
+    window.comparisonDataA = null;
+  }
+  if (typeof window.comparisonDataB !== 'undefined') {
+    window.comparisonDataB = null;
+  }
+}
+
+// Dark Mode Functionality
+function toggleDarkMode() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  // Apply theme
+  document.documentElement.setAttribute('data-theme', newTheme);
+
+  // Update button text and icon
+  const darkModeBtn = document.getElementById('darkModeBtn');
+  if (newTheme === 'dark') {
+    darkModeBtn.innerHTML = '☀️ Light';
+  } else {
+    darkModeBtn.innerHTML = '🌙 Dark';
+  }
+
+  // Save preference to localStorage
+  localStorage.setItem('theme', newTheme);
+
+  // Update chart backgrounds if charts exist
+  updateChartBackgrounds(newTheme);
+}
+
+function updateChartBackgrounds(theme) {
+  // Update single mode chart
+  const singleChart = Chart.getChart('hoursChart');
+  if (singleChart) {
+    const bgColor = theme === 'dark' ? '#2d2d2d' : 'white';
+    singleChart.options.plugins.legend.labels.color = theme === 'dark' ? '#e9ecef' : '#333';
+    singleChart.canvas.style.backgroundColor = bgColor;
+    singleChart.update();
+  }
+
+  // Update comparison mode charts
+  const chartA = Chart.getChart('hoursChartA');
+  if (chartA) {
+    const bgColor = theme === 'dark' ? '#2d2d2d' : 'white';
+    chartA.options.plugins.legend.labels.color = theme === 'dark' ? '#e9ecef' : '#333';
+    chartA.canvas.style.backgroundColor = bgColor;
+    chartA.update();
+  }
+
+  const chartB = Chart.getChart('hoursChartB');
+  if (chartB) {
+    const bgColor = theme === 'dark' ? '#2d2d2d' : 'white';
+    chartB.options.plugins.legend.labels.color = theme === 'dark' ? '#e9ecef' : '#333';
+    chartB.canvas.style.backgroundColor = bgColor;
+    chartB.update();
+  }
+}
+
+function initializeDarkMode() {
+  // Check for saved theme preference or default to light mode
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  // Update button text based on current theme
+  const darkModeBtn = document.getElementById('darkModeBtn');
+  if (savedTheme === 'dark') {
+    darkModeBtn.innerHTML = '☀️ Light';
+  } else {
+    darkModeBtn.innerHTML = '🌙 Dark';
+  }
 }
 
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
+  initializeDarkMode();
   handlePageLoad();
 });
