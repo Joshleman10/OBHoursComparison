@@ -104,8 +104,12 @@ const STORAGE_KEYS = {
   datasetA: 'obHours_datasetA',
   datasetB: 'obHours_datasetB',
   mode: 'obHours_mode',
-  isLeaving: 'spa_isLeaving'
+  isLeaving: 'spa_isLeaving',
+  version: 'obHours_version'
 };
+
+// Current version - increment this when you make changes to force cache clear
+const CURRENT_VERSION = '2.0';
 
 // Enhanced chart creation function
 function createChart(breakdownTotals, canvasId, title, dataset = null) {
@@ -465,9 +469,11 @@ function updateEnhancedTable(secondaryTotals, tertiaryDetails, outboundTotal, ta
     // Main category row with dropdown toggle
     const mainRow = document.createElement("tr");
     mainRow.style.cursor = 'pointer';
+
     mainRow.innerHTML = `
-      <td style="font-weight: bold; background-color: ${obCategoryColors[secondaryCategory] || '#f8f9fa'}; color: white;">
-        <span class="dropdown-toggle" data-target="${rowId}">▶</span> ${secondaryCategory}
+      <td class="category-dropdown-header" style="font-weight: bold; background-color: ${obCategoryColors[secondaryCategory] || '#f8f9fa'};">
+        <span class="dropdown-toggle" data-target="${rowId}" style="color: #000000;">▶</span>
+        <span style="color: #000000;">${secondaryCategory}</span>
       </td>
       <td style="font-weight: bold;">${totalHours.toFixed(2)}</td>
       <td style="font-weight: bold;">${percent.toFixed(2)}%</td>
@@ -504,13 +510,18 @@ function toggleTertiaryRows(rowId) {
   const tertiaryRows = document.querySelectorAll(`.${rowId}-tertiary`);
   const toggle = document.querySelector(`[data-target="${rowId}"]`);
 
+  if (!tertiaryRows.length) return;
+
+  // Check if first row has the 'visible' class
+  const isVisible = tertiaryRows[0].classList.contains('visible');
+
   tertiaryRows.forEach(row => {
-    if (row.style.display === 'none') {
-      row.style.display = 'table-row';
-      toggle.textContent = '▼';
-    } else {
-      row.style.display = 'none';
+    if (isVisible) {
+      row.classList.remove('visible');
       toggle.textContent = '▶';
+    } else {
+      row.classList.add('visible');
+      toggle.textContent = '▼';
     }
   });
 }
@@ -547,21 +558,31 @@ function generateComparisonAnalysis() {
     let changeClass = 'unchanged';
     let changeText = 'No change';
 
+    // Calculate hours impact: (percentDiff / 100) * datasetB.total
+    const hoursImpact = (percentDiff / 100) * datasetB.total;
+    const hoursImpactText = `${hoursImpact >= 0 ? '+' : ''}${hoursImpact.toFixed(1)} hrs`;
+
     if (Math.abs(percentDiff) > 0.1) {
       if (percentDiff > 0) {
         changeClass = 'increase';
-        changeText = `+${percentDiff.toFixed(1)}% vs 4wk avg`;
+        changeText = `+${percentDiff.toFixed(1)}% vs 4wk avg (${hoursImpactText})`;
       } else {
         changeClass = 'decrease';
-        changeText = `${percentDiff.toFixed(1)}% vs 4wk avg`;
+        changeText = `${percentDiff.toFixed(1)}% vs 4wk avg (${hoursImpactText})`;
       }
     } else {
-      changeText = `${percentDiff >= 0 ? '+' : ''}${percentDiff.toFixed(1)}% vs 4wk avg`;
+      changeText = `${percentDiff >= 0 ? '+' : ''}${percentDiff.toFixed(1)}% vs 4wk avg (${hoursImpactText})`;
     }
 
+    const categoryId = `comparison-${category.replace(/\s+/g, '-')}`;
+
+    // Main secondary category row (always visible with dropdown toggle)
     analysisHTML += `
-      <div class="comparison-result-item ${changeClass}">
-        <div class="function-name">${category}</div>
+      <div class="comparison-result-item ${changeClass}" style="cursor: pointer;" onclick="toggleComparisonTertiary('${categoryId}')">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="comparison-dropdown-toggle" id="${categoryId}-toggle">▶</span>
+          <div class="function-name">${category}</div>
+        </div>
         <div>
           <div style="font-size: 0.9rem; color: #6c757d;">
             4wk Avg: ${percentA.toFixed(1)}% |
@@ -572,12 +593,12 @@ function generateComparisonAnalysis() {
       </div>
     `;
 
-    // Add tertiary breakdown for categories with significant differences
-    if (Math.abs(percentDiff) > 1 && datasetA.tertiaryDetails[category] && datasetB.tertiaryDetails[category]) {
-      const tertiaryA = datasetA.tertiaryDetails[category] || {};
-      const tertiaryB = datasetB.tertiaryDetails[category] || {};
-      const allTertiaryFunctions = new Set([...Object.keys(tertiaryA), ...Object.keys(tertiaryB)]);
+    // Add ALL tertiary breakdowns (initially hidden)
+    const tertiaryA = datasetA.tertiaryDetails[category] || {};
+    const tertiaryB = datasetB.tertiaryDetails[category] || {};
+    const allTertiaryFunctions = new Set([...Object.keys(tertiaryA), ...Object.keys(tertiaryB)]);
 
+    if (allTertiaryFunctions.size > 0) {
       Array.from(allTertiaryFunctions).sort().forEach(tertiaryFunction => {
         const tertiaryHoursA = tertiaryA[tertiaryFunction] || 0;
         const tertiaryHoursB = tertiaryB[tertiaryFunction] || 0;
@@ -585,28 +606,70 @@ function generateComparisonAnalysis() {
         const tertiaryPercentB = datasetB.total > 0 ? (tertiaryHoursB / datasetB.total * 100) : 0;
         const tertiaryDiff = tertiaryPercentB - tertiaryPercentA;
 
-        if (Math.abs(tertiaryDiff) > 0.2) {
-          let tertiaryChangeClass = tertiaryDiff > 0 ? 'increase' : 'decrease';
-          let tertiaryChangeText = `${tertiaryDiff >= 0 ? '+' : ''}${tertiaryDiff.toFixed(1)}%`;
+        let tertiaryChangeClass = 'unchanged';
+        if (Math.abs(tertiaryDiff) > 0.1) {
+          tertiaryChangeClass = tertiaryDiff > 0 ? 'increase' : 'decrease';
+        }
 
-          analysisHTML += `
-            <div class="comparison-result-item tertiary-analysis ${tertiaryChangeClass}" style="margin-left: 30px; margin-top: 5px; padding: 8px; font-size: 0.9em;">
-              <div class="function-name" style="font-size: 0.9em; font-weight: normal; font-style: italic;">${tertiaryFunction}</div>
-              <div>
-                <div style="font-size: 0.8rem; color: #6c757d;">
+        // Calculate hours impact for tertiary: (tertiaryDiff / 100) * datasetB.total
+        const tertiaryHoursImpact = (tertiaryDiff / 100) * datasetB.total;
+        const tertiaryHoursImpactText = `${tertiaryHoursImpact >= 0 ? '+' : ''}${tertiaryHoursImpact.toFixed(1)} hrs`;
+        let tertiaryChangeText = `${tertiaryDiff >= 0 ? '+' : ''}${tertiaryDiff.toFixed(1)}% (${tertiaryHoursImpactText})`;
+
+        // Determine background color based on change class
+        let tertiaryBg = 'rgba(0,0,0,0.03)';
+        let tertiaryBorderColor = obCategoryColors[category] || '#95a5a6';
+        if (tertiaryChangeClass === 'increase') {
+          tertiaryBg = '#fdf2f2';
+          tertiaryBorderColor = '#e74c3c';
+        } else if (tertiaryChangeClass === 'decrease') {
+          tertiaryBg = '#f2fdf7';
+          tertiaryBorderColor = '#27ae60';
+        }
+
+        analysisHTML += `
+          <div class="comparison-tertiary-row ${tertiaryChangeClass} ${categoryId}-tertiary" style="display: none; margin-left: 40px; margin-top: 5px; padding: 10px; border-left: 3px solid ${tertiaryBorderColor}; background: ${tertiaryBg};">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="function-name" style="font-size: 0.9em; font-weight: normal; font-style: italic; color: #495057;">${tertiaryFunction}</div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.85rem; color: #6c757d;">
                   4wk: ${tertiaryPercentA.toFixed(1)}% | Daily: ${tertiaryPercentB.toFixed(1)}%
                 </div>
-                <div class="hours-change ${tertiaryChangeClass}" style="font-size: 0.8em; padding: 2px 6px;">${tertiaryChangeText}</div>
+                <div class="hours-change ${tertiaryChangeClass}" style="font-size: 0.85em; padding: 3px 8px; display: inline-block; margin-top: 4px;">${tertiaryChangeText}</div>
               </div>
             </div>
-          `;
-        }
+          </div>
+        `;
       });
     }
   });
 
   resultsDiv.innerHTML = analysisHTML;
   analysisDiv.style.display = 'block';
+}
+
+// Toggle function for comparison tertiary rows
+function toggleComparisonTertiary(categoryId) {
+  const tertiaryRows = document.querySelectorAll(`.${categoryId}-tertiary`);
+  const toggle = document.getElementById(`${categoryId}-toggle`);
+
+  const firstRow = tertiaryRows[0];
+  if (!firstRow) return;
+
+  // Check if first row has the 'visible' class
+  const isVisible = firstRow.classList.contains('visible');
+
+  tertiaryRows.forEach(row => {
+    if (isVisible) {
+      row.classList.remove('visible');
+    } else {
+      row.classList.add('visible');
+    }
+  });
+
+  if (toggle) {
+    toggle.textContent = isVisible ? '▶' : '▼';
+  }
 }
 
 function resetPage() {
@@ -821,16 +884,22 @@ window.addEventListener('beforeunload', () => {
 });
 
 function handlePageLoad() {
-  // Always clear all data on page load/refresh, but preserve theme preference
+  // Check version and clear data if outdated
+  const savedVersion = localStorage.getItem(STORAGE_KEYS.version);
   const savedTheme = localStorage.getItem('theme');
 
-  // Clear all stored data
-  Object.values(STORAGE_KEYS).forEach(key => {
-    localStorage.removeItem(key);
-  });
+  if (savedVersion !== CURRENT_VERSION) {
+    console.log('Version mismatch - clearing all data. Old:', savedVersion, 'New:', CURRENT_VERSION);
 
-  // Clear any other stored data except theme
-  localStorage.removeItem(STORAGE_KEYS.isLeaving);
+    // Clear all stored data except theme
+    Object.values(STORAGE_KEYS).forEach(key => {
+      localStorage.removeItem(key);
+    });
+    localStorage.removeItem(STORAGE_KEYS.isLeaving);
+
+    // Set new version
+    localStorage.setItem(STORAGE_KEYS.version, CURRENT_VERSION);
+  }
 
   // Restore theme preference
   if (savedTheme) {
@@ -919,6 +988,17 @@ function toggleDarkMode() {
 
   // Update chart backgrounds if charts exist
   updateChartBackgrounds(newTheme);
+
+  // Refresh tables to update text colors
+  if (singleModeData) {
+    updateEnhancedTable(singleModeData.secondaryTotals, singleModeData.tertiaryDetails, singleModeData.total, 'hoursTable');
+  }
+  if (datasetA) {
+    updateEnhancedTable(datasetA.secondaryTotals, datasetA.tertiaryDetails, datasetA.total, 'hoursTableA');
+  }
+  if (datasetB) {
+    updateEnhancedTable(datasetB.secondaryTotals, datasetB.tertiaryDetails, datasetB.total, 'hoursTableB');
+  }
 }
 
 function updateChartBackgrounds(theme) {

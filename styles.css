@@ -319,6 +319,11 @@ canvas {
 /* Enhanced tertiary row styling */
 tr.tertiary-row {
   background-color: #f1f3f4 !important;
+  display: none;
+}
+
+tr.tertiary-row.visible {
+  display: table-row !important;
 }
 
 tr.tertiary-row:hover {
@@ -552,12 +557,37 @@ canvas {
 }
 
 [data-theme="dark"] .tertiary-row td {
-  color: #e9ecef !important;
+  color: #495057 !important;
+}
+
+/* More specific rules to override nth-child and hover for tertiary rows */
+[data-theme="dark"] tr.tertiary-row td {
+  color: #495057 !important;
+}
+
+[data-theme="dark"] tr.tertiary-row:nth-child(even) td {
+  color: #495057 !important;
+}
+
+[data-theme="dark"] tr.tertiary-row:hover td {
+  color: #495057 !important;
 }
 
 [data-theme="dark"] .category-header td {
   color: #f8f9fa !important;
   font-weight: bold;
+}
+
+/* OVERRIDE: Force category dropdown headers to have black text in dark mode */
+/* This must be VERY specific to override inline styles and the general td rule */
+[data-theme="dark"] table tbody tr td.category-dropdown-header[style*="background-color"] {
+  color: #000000 !important;
+}
+
+[data-theme="dark"] td.category-dropdown-header,
+[data-theme="dark"] tr td.category-dropdown-header,
+[data-theme="dark"] tbody tr td.category-dropdown-header {
+  color: #000000 !important;
 }
 
 /* Dark mode comparison result items */
@@ -597,4 +627,52 @@ canvas {
 [data-theme="dark"] .hours-change.unchanged {
   background-color: #4a4a4a !important;
   color: #cccccc !important;
+}
+
+/* Comparison tertiary rows - hidden by default */
+div.comparison-tertiary-row {
+  display: none !important;
+}
+
+div.comparison-tertiary-row.visible {
+  display: block !important;
+}
+
+/* Extra specificity to ensure hiding works */
+#comparisonResults .comparison-tertiary-row {
+  display: none !important;
+}
+
+#comparisonResults .comparison-tertiary-row.visible {
+  display: block !important;
+}
+
+/* Dropdown toggle styling */
+.comparison-dropdown-toggle {
+  display: inline-block;
+  font-size: 0.9em;
+  color: #6c757d;
+  transition: transform 0.2s ease;
+  user-select: none;
+  min-width: 15px;
+}
+
+[data-theme="dark"] .comparison-dropdown-toggle {
+  color: #adb5bd;
+}
+
+/* Tertiary row styling for dark mode */
+[data-theme="dark"] .comparison-tertiary-row {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-left-color: inherit !important;
+}
+
+/* Category dropdown headers - default (light mode) text color */
+.category-dropdown-header {
+  color: white;
+}
+
+/* Dark mode: Ensure dropdown arrows/toggles are visible */
+[data-theme="dark"] .dropdown-toggle {
+  color: #000000 !important;
 }
